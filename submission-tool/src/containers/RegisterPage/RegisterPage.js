@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Button, Typography,Form, Input, Row, Col, Spin} from 'antd';
+import {Layout, Button, Typography,Form, Input, Row, Col, notification} from 'antd';
 import AppBuilder from "../AppBuilder/AppBuilder";
 import SpinCenter from "../../components/Util/SpinCenter";
 import axios from "axios";
@@ -13,6 +13,21 @@ class RegisterPage extends React.Component {
         loading : false
     }
 
+    componentDidMount = () => {
+        let user = JSON.parse(localStorage.getItem('userInfo'));
+        if(user) {
+            window.location = '/courses';
+            return;
+        }
+    }
+
+    openNotificationWithIcon = (type,message,des) => {
+        notification[type]({
+          message: message,
+          description: des,
+        });
+    };
+
     submitHandler = async (values) => {
         const name = values.name;
         const email = values.email;
@@ -20,28 +35,30 @@ class RegisterPage extends React.Component {
         const confirmPassword = values.confirmPassword;
         this.setState({loading : true});
         if (password !== confirmPassword) {
-            console.log("Password not matched");
-            // add alert or something
+            this.openNotificationWithIcon('error',"Passwords are not matching!");
+            this.setState({loading : false});
+            return;
         } else {
+            if(password.length < 8) {
+                this.openNotificationWithIcon('warning',"Short Password", "Password length should be >= 8");
+                this.setState({loading : false});
+                return;
+            }
             try {
-                const config = {
-                    headers: {
-                        "Content-type" : "application/json"
-                    }
-                }
                 const {data} = await axios.post('http://localhost:3000/api/users', {
                     name,email,password
-                }, config
-                );
-
-                if(data) {
-                    this.setState({loading : false});
-                }
-                // console.log(data);
-                // localStorage.setItem('userInfo', JSON.stringify(data));
+                });
+                this.setState({loading : false});
+                console.log(data);
+                if(data === "User Already Exists" || !data) {
+                    this.openNotificationWithIcon('error',"Error Occured","User Already Exists!");
+                    return;
+                }   
+                console.log(data);
+                localStorage.setItem('userInfo', JSON.stringify(data));
+                window.location = '/courses';
     
             } catch (error) {
-                
             }
         }
 
@@ -86,7 +103,7 @@ class RegisterPage extends React.Component {
                                     name = "email"
                                     label = "Email"
                                     initialValue = ""
-                                    rules = {[{ type : 'email', required: true, message : "Email is required!"}]}
+                                    rules = {[{ type : 'email', required: true, message : "Invalid Email!"}]}
                                 >
                                     <Input
                                         placeholder = "Enter your email"

@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Button, Typography,Form, Input, Row, Col} from 'antd';
+import {Layout, Button, Typography,Form, Input, Row, Col, notification} from 'antd';
 import AppBuilder from "../AppBuilder/AppBuilder";
 import axios from 'axios';
 
@@ -8,27 +8,42 @@ const {Content} = Layout;
 
 class LoginPage extends React.Component {
 
+    state = {
+        isAuthenticated : localStorage.getItem('userInfo')
+    }
+
+    componentDidMount = () => {
+        if(this.state.isAuthenticated) {
+            window.location = '/courses'
+            return;
+        }
+    }
+
+    openNotificationWithIcon = (type,message,des) => {
+        notification[type]({
+          message: message,
+          description: des,
+        });
+    };
+
     submitHandler = async (values) => {
         
         try {
-            const config = {
-                headers: {
-                    "Content-type" : "application/json"
-                }
-            }
             const email = values.email;
             const password = values.password;
-            const {data} = await axios.post('/api/users/login', {
+            const {data} = await axios.post('http://localhost:3000/api/users/login', {
                 email,password
-            }, config
-            );
-            // console.log(data);
+            });
+            if(data === "Error") {
+                this.openNotificationWithIcon('error',"Invalid Username or Password!");
+                return;
+            }
             localStorage.setItem('userInfo', JSON.stringify(data));
+            window.location = '/courses';
 
         } catch (error) {
             
         }
-
     }
 
     render() {
