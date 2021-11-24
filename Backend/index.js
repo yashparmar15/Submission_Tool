@@ -2,15 +2,14 @@ const express = require("express");
 require("dotenv").config();
 const keys = require("./config/keys");
 const mogoose = require("mongoose");
-const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
-const passport = require("passport");
 var cors = require("cors");
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
+const clasRoutes = require('./routes/classRoutes');
 const { errorHandler, notFound } = require("./middlewares/errorMiddleware");
 
 app.use("/public", express.static("public"));
@@ -26,17 +25,8 @@ mogoose.connect(
 		console.log(err);
 	}
 );
-
-
-// app.use(
-// 	cookieSession({
-// 		name: "college",
-// 		maxAge: 30 * 24 * 60 * 60 * 1000,
-// 		keys: [keys.cookieKey],
-// 	})
-// );
-
 app.use('/api/users', userRoutes);
+app.use('/api/class', clasRoutes);
 app.use(notFound);
 app.use(errorHandler)
 app.listen(PORT, () => {

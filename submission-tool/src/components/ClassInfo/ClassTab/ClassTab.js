@@ -8,6 +8,13 @@ import CreateQuiz from './CreateQuiz/CreateQuiz';
 const { TabPane } = Tabs;
 
 class ClassTab extends React.Component {
+
+  state = {
+    curUser : JSON.parse(localStorage.getItem('userInfo'))._id
+  }
+
+  
+
   render() {
     return (
         <Tabs defaultActiveKey="1" type="card" size="middle">
@@ -17,12 +24,14 @@ class ClassTab extends React.Component {
           <TabPane tab="People" key="2">
             <PeopleList />
           </TabPane>
+          {this.state.curUser === this.props.data.createdBy ? <>
           <TabPane tab="Create Assignment" key="3">
             <CreateAssignment/>
           </TabPane>
           <TabPane tab="Create Quiz" key="4">
-            <CreateQuiz/>
+            <CreateQuiz/> 
           </TabPane>
+          </> : null}
         </Tabs>
     );
   }

@@ -23,10 +23,12 @@ const userSchema = mongoose.Schema(
             default : false, 
         },
         teaching : {
-            type : [Class.schema]
+            type : [mongoose.Schema.Types.ObjectId],
+            ref : 'Class'
         },
         enrolled : {
-            type : [Class.schema]
+            type : [mongoose.Schema.Types.ObjectId],
+            ref : 'Class'
         }
     }
 );

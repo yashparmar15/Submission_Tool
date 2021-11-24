@@ -8,6 +8,7 @@ const { Meta } = Card;
 class ClassCard extends React.Component {
   state = {
     loading: false,
+    userId : JSON.parse(localStorage.getItem('userInfo'))._id
   };
 
   onChange = checked => {
@@ -19,10 +20,12 @@ class ClassCard extends React.Component {
 
     const menu = (
         <Menu>
-          <Menu.Item>
-            <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
-              Unenroll
-            </a>
+          <Menu.Item 
+            key = {1} 
+            onClick = {this.state.userId === this.props.id ? 
+                          this.props.handleRemoveClass.bind(this,this.props.code)
+                        : this.props.handleUnEnrollClass.bind(this,this.props.code)}>
+              {this.state.userId === this.props.id ? "Delete Class" : "Unenroll"}
           </Menu.Item>
         </Menu>
     );
@@ -42,8 +45,8 @@ class ClassCard extends React.Component {
                 avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
                 title = {<Link 
                             to = {{
-                              pathname : `/course/${this.props.name}`,
-                              query : {classCode : this.props.name}
+                              pathname : `/course/${this.props.code}`,
+                              query : {code : this.props.code, title : this.props.name}
                             }}
                           > 
                             <p>{this.props.name}</p> 

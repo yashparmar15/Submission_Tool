@@ -8,21 +8,34 @@ import JoinClass from './components/ClassInfo/JoinClass/JoinClass';
 import CreateClass from './components/ClassInfo/CreateClass/CreateClass';
 import LoginPage from './containers/LoginPage/LoginPage';
 import RegisterPage from './containers/RegisterPage/RegisterPage';
+import React from 'react';
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path = "/login" element = {<LoginPage/>} />
-        <Route path = "/register" element = {<RegisterPage/>} />
-        <Route path = '/courses' element = {<ClassesList/>} />
-        <Route path = {`/course/:course_id`} element = {<ClassInfo />} />
-        <Route path = '/join_course' element = {<JoinClass/>}/>
-        <Route path = "/create_course" element = {<CreateClass/>}/>
-        <Route path = "*" element = {<PageNotFound/>} />
-      </Routes>
-    </Router>
-  );
+class App extends React.Component {
+
+  state = {
+    isAuthenticated : localStorage.getItem('userInfo')
+  }
+
+  render() {
+    return (
+      <Router>
+        <Routes>
+          {this.state.isAuthenticated ? <>
+          <Route path = "/login" element = {<LoginPage/>} />
+          <Route path = "/register" element = {<RegisterPage/>} />
+          <Route path = '/courses' element = {<ClassesList/>} />
+          <Route path = {`/course/:course_id`} element = {<ClassInfo />} />
+          <Route path = '/join_course' element = {<JoinClass/>}/>
+          <Route path = "/create_course" element = {<CreateClass/>}/>
+          <Route path = "*" element = {<PageNotFound/>} />
+          </> : null}
+          <Route path = "/login" element = {<LoginPage/>} />
+          <Route path = "/register" element = {<RegisterPage/>} />
+          <Route path = "*" element = {<PageNotFound/>} />
+        </Routes>
+      </Router>
+    );
+  }
 }
 
 export default App;

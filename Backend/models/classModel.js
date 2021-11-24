@@ -7,14 +7,22 @@ const classSchema = mongoose.Schema(
         title : {
             type : String,
             required : true,
-            unique : true
         },
         description : {
             type : String,
         },
+        code : {
+            type : String,
+            unique : true
+        },
+        createdBy : {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'User'
+        },
         posts : {
-            type : [Post.schema]
-        }
+            type : [Post.schema],
+            default : []
+        },
     }
 )
 
