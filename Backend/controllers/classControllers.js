@@ -155,7 +155,17 @@ const removeClass = async (req, res) => {
     res.send("success");
 };
 
+const getEnrolledStudents = async (req, res) => {
+    let {classId} = req.body;
+    let d = await User.find({enrolled : {
+        $in : [classId]
+    }}).select(["name", "email", "-_id"])
+    res.send(d);
+};
 
 
 
-module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails, unenrollClass, removeClass};
+
+
+
+module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails, unenrollClass, removeClass, getEnrolledStudents};

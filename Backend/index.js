@@ -9,7 +9,8 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
-const clasRoutes = require('./routes/classRoutes');
+const classRoutes = require('./routes/classRoutes');
+const postRoutes = require('./routes/postRoutes')
 const { errorHandler, notFound } = require("./middlewares/errorMiddleware");
 
 app.use("/public", express.static("public"));
@@ -26,7 +27,8 @@ mogoose.connect(
 	}
 );
 app.use('/api/users', userRoutes);
-app.use('/api/class', clasRoutes);
+app.use('/api/class', classRoutes);
+app.use('/api/posts', postRoutes);
 app.use(notFound);
 app.use(errorHandler)
 app.listen(PORT, () => {

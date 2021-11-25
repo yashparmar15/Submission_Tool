@@ -1,29 +1,19 @@
 import React from "react";
 import EmptyComponent from "../../../Util/EmptyComponent";
-import {Card, List} from 'antd';
+import {Card, List, Typography} from 'antd';
 import {FileAddFilled} from '@ant-design/icons';
 import {Link} from 'react-router-dom'
 
 class ClassStream extends React.Component {
 
     state = {
-        posts : [{
-            title : "Title Here",
-            description : "Description Here",
-            key : 1
-        },{
-            title : "Title Here",
-            description : "Description Here",
-            key : 2
-        },{
-            title : "Title Here",
-            description : "Description Here",
-            key : 3
-        },]
+        // classData : this.props.classData,
+        posts : []
     }
 
     render() {
         return ( <>
+            <Typography><b>Class Description :- </b> {this.props.classData.description}</Typography>
             {this.state.posts.length === 0 ?
                 <EmptyComponent text = "No Posts"/> :
                 <List

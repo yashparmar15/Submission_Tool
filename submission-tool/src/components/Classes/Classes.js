@@ -1,8 +1,9 @@
 import React from "react";
 import ClassCard from './ClassCard/ClassCard';
-import {List, Typography} from 'antd'
+import {List, Typography, message} from 'antd'
 import EmptyComponent from '../Util/EmptyComponent';
 import axios from "axios";
+import SpinCenter from '../../components/Util/SpinCenter'
 
 class Classes extends React.Component {
 
@@ -10,15 +11,25 @@ class Classes extends React.Component {
         enrolled : [],
         teaching : [],
         classes : [],
-        userId : JSON.parse(localStorage.getItem('userInfo'))._id
+        userId : JSON.parse(localStorage.getItem('userInfo'))._id,
+        loading : true
     }
 
+    error = (err) => {
+        message.error(err);
+    };
+
     componentDidMount = async () => {
-        let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-        let enrolled = await axios.post('http://localhost:3000/api/class/enrolled', {userId})
-        this.setState({enrolled : enrolled.data})
-        let teaching = await axios.post('http://localhost:3000/api/class/teaching', {userId})
-        this.setState({teaching : teaching.data})
+        try {
+            let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
+            let enrolled = await axios.post('http://localhost:3000/api/class/enrolled', {userId})
+            this.setState({enrolled : enrolled.data})
+            let teaching = await axios.post('http://localhost:3000/api/class/teaching', {userId})
+            this.setState({teaching : teaching.data})
+            this.setState({loading : false})
+        } catch (error) {
+            this.error("Something went wrong!")
+        }
     }
 
     handleUnEnrollClass = async (code) => {
@@ -53,14 +64,18 @@ class Classes extends React.Component {
                     style = {{
                         fontSize : 25,
                         fontWeight : 'bold',
-                        textAlign : 'center'
+                        textAlign : 'center',
+                        marginBottom : 10
                     }}
                 >Instructing Classes</Typography>
-                {this.state.teaching.length === 0 ?  <EmptyComponent 
-                    text = "No Class, Create Now!"
-                    buttonText = "Create Now"
-                    url = "/create_course"
-                />:
+                {this.state.teaching.length === 0 ? <>
+                    {this.state.loading ? <SpinCenter /> : null}
+                    <EmptyComponent 
+                        text = "No Class, Create Now!"
+                        buttonText = "Create Now"
+                        url = "/create_course"
+                    />
+                </>:
                 <List
                     grid={{
                         gutter: 16
@@ -83,14 +98,18 @@ class Classes extends React.Component {
                     style = {{
                         fontSize : 25,
                         fontWeight : 'bold',
-                        textAlign : 'center'
+                        textAlign : 'center',
+                        marginBottom : 10
                     }}
                 >Enrolled Classes</Typography>
-                {this.state.enrolled.length === 0 ?  <EmptyComponent 
-                    text = "No Class, Join Now!"
-                    buttonText = "Join Now"
-                    url = "/join_course"
-                />:
+                {this.state.enrolled.length === 0 ? <>
+                    {this.state.loading ? <SpinCenter /> : null}
+                    <EmptyComponent 
+                        text = "No Class, Join Now!"
+                        buttonText = "Join Now"
+                        url = "/join_course"
+                    />
+                </>:
                 <List
                     grid={{
                         gutter: 16

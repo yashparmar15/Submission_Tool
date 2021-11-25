@@ -2,7 +2,11 @@ import React from 'react';
 import { Form, Input, Button, DatePicker, InputNumber, TimePicker, Layout, Col, Row, Typography} from 'antd';
 const {Content} = Layout;
 
+
 class CreateAssignment extends React.Component {
+
+
+    
 
     render() {
         return (
@@ -24,6 +28,7 @@ class CreateAssignment extends React.Component {
                                 wrapperCol={{ span: 12 }}
                                 layout="horizontal"
                                 // onValuesChange={onFormLayoutChange}
+                                onFinish = {this.props.createAssignment.bind()}
                                 size = "middle"
                             >
                                 <Form.Item 
@@ -33,15 +38,28 @@ class CreateAssignment extends React.Component {
                                 >
                                     <Input placeholder = "Enter Assignment Title"/>
                                 </Form.Item>
-                                <Form.Item label="Description">
+                                <Form.Item 
+                                    label="Description"
+                                    name = "description"
+                                >
                                     <Input.TextArea placeholder = "Enter Description here" />
                                 </Form.Item>
                                 <Form.Item 
-                                    label="Deadline"
+                                    label="Deadline (Date)"
+                                    name = "date"
                                     rules = {[{ required: true, message : "Deadline is required"}]}
                                 >
-                                    <DatePicker style = {{marginRight : 20, marginBottom : 10}}/>
-                                    <TimePicker />
+                                    <DatePicker 
+                                        format = "YYYY:MM:DD"
+                                        style = {{marginRight : 20, marginBottom : 10}}
+                                    />
+                                </Form.Item>
+                                <Form.Item 
+                                    label="Deadline (Time)"
+                                    name = "time"
+                                    rules = {[{ required: true, message : "Deadline is required"}]}
+                                >
+                                    <TimePicker format = "HH:mm"/>
                                 </Form.Item>
                                 <Form.Item 
                                     name = "marks"

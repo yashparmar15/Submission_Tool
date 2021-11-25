@@ -1,63 +1,24 @@
 import React from 'react';
-import { List, Avatar} from 'antd';
+import { List} from 'antd';
+import {UserOutlined} from '@ant-design/icons'
 
 class PeopleList extends React.Component {
 
     state = {
-        peoples : [{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        },{
-            name : "Yash Parmar",
-            email : "yashparmar15700@gmail.com",
-            imageuri : "https://joeschmoe.io/api/v1/random"
-        }]
+       enrolledStudents : this.props.enrolledStudents
     }
 
     render() {
         return (
             <List
                 itemLayout="horizontal"
-                dataSource={this.state.peoples}
+                dataSource={this.state.enrolledStudents}
                 renderItem={item => (
                 <List.Item>
                     <List.Item.Meta
-                    avatar = {<Avatar src= {item.imageuri} />}
-                    title = {item.name}
-                    description = {item.email}
+                        avatar = {<UserOutlined style = {{fontSize : 25, marginTop : 5}}/>}
+                        title = {item.name}
+                        description = {item.email}
                     />
                 </List.Item>
                 )}

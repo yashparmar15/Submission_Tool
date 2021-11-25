@@ -25,7 +25,6 @@ class AppBuilder extends React.Component {
             className="site-page-header"
             onBack={() => window.history.back()}
             title= {this.props.heading}
-            subTitle= "Description Goes Here"
           />
           </Header>
           </Affix>

@@ -20,7 +20,8 @@ const classSchema = mongoose.Schema(
             ref : 'User'
         },
         posts : {
-            type : [Post.schema],
+            type : [mongoose.Schema.Types.ObjectId],
+            ref : 'Post',
             default : []
         },
     }

@@ -9,6 +9,7 @@ import CreateClass from './components/ClassInfo/CreateClass/CreateClass';
 import LoginPage from './containers/LoginPage/LoginPage';
 import RegisterPage from './containers/RegisterPage/RegisterPage';
 import React from 'react';
+import AttendQuiz from './containers/AttendQuiz/AttendQuiz';
 
 class App extends React.Component {
 
@@ -27,6 +28,7 @@ class App extends React.Component {
           <Route path = {`/course/:course_id`} element = {<ClassInfo />} />
           <Route path = '/join_course' element = {<JoinClass/>}/>
           <Route path = "/create_course" element = {<CreateClass/>}/>
+          <Route path = {`/attend_quiz/:quiz_id`} element = {<AttendQuiz />} />
           <Route path = "*" element = {<PageNotFound/>} />
           </> : null}
           <Route path = "/login" element = {<LoginPage/>} />
