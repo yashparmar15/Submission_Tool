@@ -104,7 +104,7 @@ class ClassTab extends React.Component {
             />
           </TabPane>
           <TabPane tab="Create Quiz" key="4">
-            <CreateQuiz/> 
+            <CreateQuiz classId = {this.state.classData._id}/> 
           </TabPane>
           </> : null}
         </Tabs>

@@ -3,13 +3,12 @@ import EmptyComponent from "../../../Util/EmptyComponent";
 import {Card, List, Typography} from 'antd';
 import {FileAddFilled} from '@ant-design/icons';
 import {Link} from 'react-router-dom'
-import SpinCenter from '../../../Util/SpinCenter'
 
 class ClassStream extends React.Component {
    
     state = {
         // classData : this.props.classData,
-        posts : this.props.posts
+        posts : this.props.posts,
     }
 
     render() {
@@ -42,15 +41,21 @@ class ClassStream extends React.Component {
                                 <List.Item.Meta
                                     avatar={<FileAddFilled style = {{fontSize : 30, color : '#4285F4'}}/>}
                                     title={<Link 
-                                        to = {`/course/${this.props.classData.code}/assignment/${item._id}`}
+                                        to = {item.type === "Quiz" ? 
+                                            `/course/${this.props.classData.code}/attend_quiz/${item._id}`
+                                        :   `/course/${this.props.classData.code}/assignment/${item._id}`
+                                        }
                                         state = {{postId : item._id}}
                                     >
                                         {item.title}
                                     </Link>}
-                                    description= {item.deadline}
+                                    description= {item.type === "Quiz" ? `Start Time : ${item.startTime}` : `Deadline : ${item.deadline}`}
                                 />
                                 <Link 
-                                    to = {`/course/${this.props.classData.code}/assignment/${item._id}`}
+                                    to = {item.type === "Quiz" ? 
+                                        `/course/${this.props.classData.code}/attend_quiz/${item._id}`
+                                    :   `/course/${this.props.classData.code}/assignment/${item._id}`
+                                    }
                                 >
                                     View
                                 </Link>

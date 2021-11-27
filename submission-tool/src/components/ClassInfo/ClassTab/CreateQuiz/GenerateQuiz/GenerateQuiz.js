@@ -1,9 +1,10 @@
 import React from "react";
-import {Row, Col, Input, Typography, Button, Layout, Affix, Tooltip, InputNumber} from 'antd';
+import {Row, Col, Input, Typography, Button, Layout, Affix, Tooltip, InputNumber, message} from 'antd';
 import InputField from "../../../../Util/InputField";
 import InputTextArea from "../../../../Util/InputTextArea";
 import MultipleChoice from "../../../../Util/MultipleChoice";
-import {DeleteOutlined} from '@ant-design/icons'
+import {DeleteOutlined} from '@ant-design/icons';
+import axios from 'axios';
 
 const {Content} = Layout;
 
@@ -11,10 +12,13 @@ class GenerateQuiz extends React.Component {
 
     state = {
         title : this.props.data.title,
-        description : this.props.data.description,
+        description : this.props.data.description === undefined ? "" : this.props.data.description,
+        startTiming : this.props.data.startTiming,
+        timeAlloted : this.props.data.timeAlloted,
+        classId : this.props.classId,
         questions : [{
-            text : "Question",
-            description : "Description",
+            text : "",
+            description : "",
             key : 1,
             options : [{
                 val : "",
@@ -24,6 +28,71 @@ class GenerateQuiz extends React.Component {
             mid : 1,
             score : 0
         }],
+        postId : "",
+        loading : false
+    }
+
+    saveQuizChanges = async () => {
+        let questions = [...this.state.questions];
+        let finalQuestions = []
+        for(let i = 0 ; i < questions.length ; i++) {
+            if(questions[i].text === "") {
+                message.error("Question text can't be empty!");
+                return;
+            }
+            if(questions[i].score === 0) {
+                message.error("Score can't be zero");
+                return;
+            }
+            let options = [...questions[i].options];
+            if(!options || options.length <= 1) {
+                message.warning("Please provide atleast two options!")
+                return;
+            }
+            let checkAnswerSelected = false;
+            let finalOptions = [];
+            let answer = "";
+            for(let j = 0 ; j < options.length ; j++) {
+                if(options[j].val === "") {
+                    message.error("Options can't be empty!");
+                    return;
+                }
+                if(options[j].selected) {
+                    answer = options[j].val;
+                }
+                checkAnswerSelected = checkAnswerSelected || options[j].selected;
+                finalOptions.push(options[j].val);
+            }
+            if(checkAnswerSelected === false) {
+                message.warning("Please select answer for each questions");
+                return;
+            }
+
+            let question = {
+                question : questions[i].text,
+                description : questions[i].description,
+                options : finalOptions,
+                marks : questions[i].score,
+                answer : answer
+            }
+            finalQuestions.push(question);
+        }
+        // console.log(this.props)
+        let data = {
+            title : this.state.title,
+            description : this.state.description,
+            startTime : this.props.startingTime,
+            timeAlloted : this.state.timeAlloted,
+            questions : finalQuestions
+        }
+        this.setState({loading : true});
+        let classId = this.state.classId;
+        console.log(data);
+        let postId = this.state.postId;
+        let res = await axios.post('http://localhost:3000/api/posts/create_quiz',{data,classId,postId});
+        this.setState({postId : res.data});
+        this.setState({loading : false});
+        message.success("Successfully saved!")
     }
 
     addField = () => {
@@ -37,6 +106,7 @@ class GenerateQuiz extends React.Component {
                 id : 1,
             }],
             mid : 1,
+            score : 0
         }
         arr.push(obj);
         this.setState({questions : arr});
@@ -142,7 +212,7 @@ class GenerateQuiz extends React.Component {
         arr = arr.map(data => {
             if(data.key === key) {
                 data.mid = data.mid + 1;
-                data.options.push({val : "",id : data.mid});
+                data.options.push({val : "",id : data.mid, selected : false});
             }
             return data;
         })
@@ -248,11 +318,18 @@ class GenerateQuiz extends React.Component {
                         onChange = {event => this.setState({description : event.target.value})}
                     />
                     <Affix offsetTop = {50}>
-                        <Button type="primary" block style = {{marginTop : 30}} onClick = {this.addField}>
+                        <Button type="dashed" block style = {{marginTop : 30}} onClick = {this.addField}>
                             Add Question
                         </Button>
+                        {/* <Button type = "primary">Save Quiz</Button> */}
                     </Affix>
                     {questions}
+                    <Button 
+                        type = "primary"
+                        onClick = {this.saveQuizChanges}
+                    >
+                        {!this.state.loading ? "Save Changes" : "Saving..."}
+                    </Button>
                 </Col>
             </Row>
         )

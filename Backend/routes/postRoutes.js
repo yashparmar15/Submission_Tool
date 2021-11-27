@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPost, fetchPost, fetchPosts, isInstructor, addComment, checkEnrolled, uploadAssignment, getAssignments, saveMarks, getSubmittedDetails } = require('../controllers/postControllers');
+const { createPost, fetchPost, fetchPosts, isInstructor, addComment, checkEnrolled, uploadAssignment, getAssignments, saveMarks, getSubmittedDetails, createQuiz } = require('../controllers/postControllers');
 
 const router = express.Router()
 
@@ -13,4 +13,5 @@ router.route('/upload_assignment').post(uploadAssignment);
 router.route('/assignments').post(getAssignments);
 router.route('/save_marks').post(saveMarks);
 router.route('/get_submitted_details').post(getSubmittedDetails);
+router.route('/create_quiz').post(createQuiz);
 module.exports = router;

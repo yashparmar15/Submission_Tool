@@ -2,6 +2,7 @@ const Post = require('../models/postModel');
 const Class = require('../models/classModel');
 const User = require('../models/userModel');
 const { isValidObjectId } = require('mongoose');
+const Question = require('../models/questionModel');
 
 const createPost = async (req, res) => {
     const {classId, title, description, marks, type, deadline} = req.body;
@@ -25,7 +26,7 @@ const fetchPosts = async (req, res) => {
     let posts = [...classData.posts];
     let data = []
     for(let i = 0 ; i < posts.length ; i++) {
-        data.push(await Post.findOne({_id : posts[i]}));
+        data.push(await Post.findOne({_id : posts[i]}).select(["title","startTime","deadline","type"]));
     }
     data.reverse();
     res.send(data);
@@ -42,7 +43,18 @@ const fetchPost = async (req, res) => {
     if(isValidObjectId(postId.toString())) {
         let postData = await Post.findOne({_id : postId});
         if(postData) {
-            res.send(postData);
+            let data = {
+                title : postData.title,
+                description : postData.description,
+                marks : postData.marks,
+                type : postData.type,
+                deadline : postData.deadline,
+                startTime : postData.startTime,
+                timeAlloted : postData.timeAlloted,
+                questions : postData.questions,
+                comments : postData.comments
+            }
+            res.send(data);
         } else {
             res.send("error");
         }
@@ -130,8 +142,39 @@ const getSubmittedDetails = async (req,res) => {
     res.send(user);
 }
 
+const createQuiz = async (req, res) => {
+    const {data, classId, postId} = req.body;
+    const {title, description, startTime, timeAlloted, questions} = data;
+    let type = "Quiz";
+    let post = null;
+    if(postId === ""){
+        post = await Post.create({
+            title,
+            description,
+            type,
+            startTime,
+            timeAlloted
+        });
+        await Class.findByIdAndUpdate({_id : classId}, {$push : {
+            posts : post._id
+        }})
+    } else {
+        post = await Post.findByIdAndUpdate({_id : postId}, {
+            title,
+            description,
+            startTime,
+            timeAlloted
+        })
+    }
+    let postQuestions = [];
+    for(let i = 0 ; i < questions.length ; i++) {
+        let question = await Question.create(questions[i]);
+        postQuestions.push(question);
+        await Post.findByIdAndUpdate({_id : post._id}, {questions : postQuestions});
+    }
+    res.send(post._id);
+}
 
 
 
-
-module.exports = {createPost, fetchPosts, fetchPost, isInstructor, addComment, checkEnrolled, uploadAssignment, getAssignments, saveMarks, getSubmittedDetails}; 
+module.exports = {createPost, fetchPosts, fetchPost, isInstructor, addComment, checkEnrolled, uploadAssignment, getAssignments, saveMarks, getSubmittedDetails, createQuiz}; 

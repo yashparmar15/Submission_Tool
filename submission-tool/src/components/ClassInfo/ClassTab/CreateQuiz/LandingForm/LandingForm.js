@@ -1,5 +1,5 @@
 import React from "react";
-import {Layout, Button, Typography,Form, Input} from 'antd';
+import {Layout, Button, Typography,Form, Input, DatePicker, TimePicker, InputNumber} from 'antd';
 
 const {Content} = Layout;
 
@@ -40,6 +40,27 @@ class LandingForm extends React.Component {
                             rows = "5"
                             placeholder = "Please provide short description"
                         />
+                    </Form.Item>
+                    <Form.Item 
+                        required
+                        label = "Start Date"
+                        name = "start_date"
+                    >
+                        <DatePicker style = {{width : '100%'}}/>
+                    </Form.Item>
+                    <Form.Item 
+                        label = "Start Time"
+                        name = "start_time"
+                        required
+                    >
+                        <TimePicker format = "HH:mm" style = {{width : '100%'}}/>
+                    </Form.Item>
+                    <Form.Item 
+                        required
+                        label = "Alloted Time (in min)"
+                        name = "time"
+                    >
+                        <InputNumber min = {1} style = {{width : '100%'}}/>
                     </Form.Item>
                     <Form.Item wrapperCol={{ span: 12, offset: 8 }}>
                         <Button type="primary" htmlType="submit">

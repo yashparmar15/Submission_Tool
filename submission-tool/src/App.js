@@ -30,7 +30,7 @@ class App extends React.Component {
           <Route path = {`/course/:course_id`} element = {<ClassInfo />} />
           <Route path = '/join_course' element = {<JoinClass/>}/>
           <Route path = "/create_course" element = {<CreateClass/>}/>
-          <Route path = {`/attend_quiz/:quiz_id`} element = {<AttendQuiz />} />
+          <Route path = {`/course/:id/attend_quiz/:quiz_id`} element = {<AttendQuiz />} />
           <Route path = {`/course/:id/assignment/:id`} element = {<SubmitAssignment />} />
           <Route path = {`/course/:id/assignment/:id/grade`} element = {<GradeAssignment />} />
           <Route path = "*" element = {<PageNotFound/>} />

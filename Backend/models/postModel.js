@@ -12,19 +12,22 @@ const postSchema = mongoose.Schema(
         },
         marks : {
             type : Number,
-            required : true,
+            default : 0
         },
         type : {
             type : String,
         },
         deadline : {
-            type : String
+            type : String,
+            default : ""
         },
         startTime : {
-            type : Date
+            type : String,
+            default : ""
         },
         timeAlloted : {
-            type : Number
+            type : Number,
+            default : 0
         },
         questions : {
             type : [mongoose.Schema.Types.ObjectId],

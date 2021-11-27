@@ -23,12 +23,11 @@ class GeneralInstruction extends React.Component {
                     fontFamily : 'monospace'
                 }}>
                     <ul>
-                        <li> Total number of question are "qestion"</li>
+                        <li> Total number of question are <b>{this.props.data.questions.length}</b>.</li>
                         <li> You have to completed the quiz in the alloted time. If you failed to submit the responses in time, whatever you have selected till that time will be counted.</li>
-                        <li> You can start quiz "start time" and quiz will automatically end after "time" time. </li>
-                        <li> You can not move to next question before answering the current question </li>
-                        <li>You can't go back once you submitted the answer.</li>
-                        <li> You have given enough time to completed the quiz. Please enter strictly at "start time".</li>
+                        <li> You can start quiz at <b>{this.props.data.startTime}</b> and quiz will automatically end after <b>{this.props.data.timeAlloted}</b> minutes. </li>
+                        <li> You can't go back once you pass through the question.</li>
+                        <li> You have provided enough time to completed the quiz. Please enter strictly at <b>{this.props.data.startTime}</b>.</li>
                     </ul>
                 </Typography>
                 {/* disabled till start time */}
