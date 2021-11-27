@@ -36,7 +36,10 @@ class CreateAssignment extends React.Component {
                                     label="Title" 
                                     rules = {[{ required: true, message : "Title is required"}]}
                                 >
-                                    <Input placeholder = "Enter Assignment Title"/>
+                                    <Input 
+                                        style = {{width : '100%'}}
+                                        placeholder = "Enter Assignment Title"
+                                    />
                                 </Form.Item>
                                 <Form.Item 
                                     label="Description"
@@ -51,7 +54,7 @@ class CreateAssignment extends React.Component {
                                 >
                                     <DatePicker 
                                         format = "YYYY:MM:DD"
-                                        style = {{marginRight : 20, marginBottom : 10}}
+                                        style = {{marginRight : 20, marginBottom : 10, width : '100%'}}
                                     />
                                 </Form.Item>
                                 <Form.Item 
@@ -59,14 +62,22 @@ class CreateAssignment extends React.Component {
                                     name = "time"
                                     rules = {[{ required: true, message : "Deadline is required"}]}
                                 >
-                                    <TimePicker format = "HH:mm"/>
+                                    <TimePicker
+                                        style = {{width : '100%'}}
+                                        format = "HH:mm"
+                                    />
                                 </Form.Item>
                                 <Form.Item 
                                     name = "marks"
                                     label="Maximum Marks"
                                     rules = {[{ required: true, message : "Marks is required"}]}
                                 >
-                                    <InputNumber min = {1} max = {100} value = {100}/>
+                                    <InputNumber
+                                        min = {1} 
+                                        max = {100}
+                                        value = {100}
+                                        style = {{width : '100%'}}
+                                    />
                                 </Form.Item>
                                 <Form.Item wrapperCol={{ offset: 6, span: 8 }}>
                                     <Button type="primary" htmlType="submit">

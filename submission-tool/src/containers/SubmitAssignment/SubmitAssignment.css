@@ -1,0 +1,25 @@
+.topContainer {
+    display: flex;
+}
+
+.description {
+    width: 70%;
+}
+
+.upload {
+    width: 30%;
+}
+
+@media screen and (max-width : 800px) {
+    .topContainer {
+        flex-direction: column;
+    }
+    
+    .description {
+        width: 100%;
+    }
+    
+    .upload {
+        width: 100%;
+    }
+}

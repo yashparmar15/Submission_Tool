@@ -41,6 +41,7 @@ class QuizQuestion extends React.Component {
                         direction = "vertical"
                     >
                     <Radio.Button 
+                        style = {{width : '60vw' , height : 'auto'}}
                         value="a"
                     >   Hangzhou
                     </Radio.Button>

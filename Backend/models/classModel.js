@@ -19,6 +19,9 @@ const classSchema = mongoose.Schema(
             type : mongoose.Schema.Types.ObjectId,
             ref : 'User'
         },
+        instructorName : {
+            type : String,
+        },
         posts : {
             type : [mongoose.Schema.Types.ObjectId],
             ref : 'Post',

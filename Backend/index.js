@@ -1,11 +1,14 @@
 const express = require("express");
+const fileUpload = require('express-fileupload');
 require("dotenv").config();
 const keys = require("./config/keys");
 const mogoose = require("mongoose");
 const bodyParser = require("body-parser");
 var cors = require("cors");
 const app = express();
+app.use(fileUpload());
 app.use(cors());
+app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');

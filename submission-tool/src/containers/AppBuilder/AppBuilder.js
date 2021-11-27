@@ -23,7 +23,7 @@ class AppBuilder extends React.Component {
           <Header className="site-layout-background" style={{ padding: 0 }}>
           <PageHeader
             className="site-page-header"
-            onBack={() => window.history.back()}
+            onBack={() => window.location = '/courses'}
             title= {this.props.heading}
           />
           </Header>

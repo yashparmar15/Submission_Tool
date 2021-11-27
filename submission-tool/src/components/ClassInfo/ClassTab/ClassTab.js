@@ -5,6 +5,7 @@ import ClassStream from './ClassStream/ClassStream';
 import CreateAssignment from './CreateAssignment/CreateAssignment';
 import CreateQuiz from './CreateQuiz/CreateQuiz';
 import axios from 'axios';
+import SpinCenter from '../../Util/SpinCenter';
 
 const { TabPane } = Tabs;
 
@@ -13,7 +14,10 @@ class ClassTab extends React.Component {
   state = {
     curUser : JSON.parse(localStorage.getItem('userInfo'))._id,
     classData : this.props.data,
-    enrolledStudents : []
+    enrolledStudents : [],
+    posts : [],
+    loading : true,
+    instructor : {}
   }
 
   error = (err) => {
@@ -26,6 +30,7 @@ class ClassTab extends React.Component {
         description:
           'Please head-over to stream section to view assignment',
       });
+      window.location.reload();
   };
 
   createAssignment = async (values) => {
@@ -63,8 +68,14 @@ class ClassTab extends React.Component {
     }
     this.setState({classData : classData.data});
     let classId = this.state.classData._id;
+    let posts = await axios.post('http://localhost:3000/api/posts/fetchposts', {classId});
+    this.setState({posts : posts.data});
     let data = await axios.post('http://localhost:3000/api/class/get_enrolled_students', {classId});
     this.setState({enrolledStudents : data.data});
+    let instructorId = this.state.classData.createdBy;
+    let instuctorData = await axios.post('http://localhost:3000/api/class/get_instructor', {instructorId});
+    this.setState({instructor : instuctorData.data});
+    this.setState({loading : false});
   }
 
   
@@ -73,10 +84,18 @@ class ClassTab extends React.Component {
     return (
         <Tabs defaultActiveKey="1" type="card" size="middle">
           <TabPane tab="Stream" key="1">
-            <ClassStream classData = {this.state.classData}/>
+            {this.state.loading ? <SpinCenter /> :
+            <ClassStream 
+              classData = {this.state.classData}
+              posts = {this.state.posts}
+              loading = {this.state.loading}
+            />}
           </TabPane>
           <TabPane tab="People" key="2">
-            <PeopleList enrolledStudents = {this.state.enrolledStudents}/>
+            <PeopleList 
+              enrolledStudents = {this.state.enrolledStudents} 
+              data = {this.state.instructor}
+            />
           </TabPane>
           {this.state.curUser === this.props.data.createdBy ? <>
           <TabPane tab="Create Assignment" key="3">

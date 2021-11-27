@@ -32,6 +32,7 @@ class JoinClass extends React.Component {
             description : this.state.description,
             code : code,
             createdBy : JSON.parse(localStorage.getItem('userInfo'))._id,
+            instructorName : JSON.parse(localStorage.getItem('userInfo')).name
         }
         
         let message = await axios.post('http://localhost:3000/api/class', data);

@@ -29,6 +29,23 @@ const postSchema = mongoose.Schema(
         questions : {
             type : [mongoose.Schema.Types.ObjectId],
             ref : 'Question'
+        },
+        comments : {
+            type : [{
+                name : String,
+                comment : String
+            }],
+            default : []
+        },
+        uploadedAssignments : {
+            type : [{
+                userId : String,
+                file : String,
+                name : String,
+                email : String,
+                marks : Number,
+                key : String
+            }]
         }
     }
 )

@@ -3,29 +3,36 @@ import EmptyComponent from "../../../Util/EmptyComponent";
 import {Card, List, Typography} from 'antd';
 import {FileAddFilled} from '@ant-design/icons';
 import {Link} from 'react-router-dom'
+import SpinCenter from '../../../Util/SpinCenter'
 
 class ClassStream extends React.Component {
-
+   
     state = {
         // classData : this.props.classData,
-        posts : []
+        posts : this.props.posts
     }
 
     render() {
         return ( <>
-            <Typography><b>Class Description :- </b> {this.props.classData.description}</Typography>
+            <Typography style = {{
+                marginBottom : 20
+            }}>
+                <b>
+                    Class Description {this.props.load}:- 
+                </b> {this.props.classData.description}
+            </Typography>
             {this.state.posts.length === 0 ?
                 <EmptyComponent text = "No Posts"/> :
                 <List
-                    dataSource={this.state.posts}
+                    dataSource={this.props.posts}
                     renderItem={item => (
                         <Card style = {{
                             borderWidth : 5,
-                            marginBottom : 10,
+                            marginBottom : 5,
                             borderRadius : 10,
                         }}>
                             <List.Item 
-                                key={item.key}
+                                key={item._id}
                                 style = {{
                                     borderWidth : 0,
                                     marginTop : -10,
@@ -34,10 +41,19 @@ class ClassStream extends React.Component {
                             >
                                 <List.Item.Meta
                                     avatar={<FileAddFilled style = {{fontSize : 30, color : '#4285F4'}}/>}
-                                    title={<a href="https://ant.design">{item.title}</a>}
-                                    description= "Very very long long long long description"
+                                    title={<Link 
+                                        to = {`/course/${this.props.classData.code}/assignment/${item._id}`}
+                                        state = {{postId : item._id}}
+                                    >
+                                        {item.title}
+                                    </Link>}
+                                    description= {item.deadline}
                                 />
-                                <Link to = '/'>View</Link>
+                                <Link 
+                                    to = {`/course/${this.props.classData.code}/assignment/${item._id}`}
+                                >
+                                    View
+                                </Link>
                             </List.Item>
                         </Card>
                     )}

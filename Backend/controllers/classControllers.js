@@ -5,7 +5,7 @@ const { Mongoose } = require('mongoose');
 
 
 const addClass = async (req, res) => {
-    const {title, description, code, createdBy} = req.body;
+    const {title, description, code, createdBy, instructorName} = req.body;
     const classExists = await Class.findOne({ code });
     const clas = await Class.findOne({ title });
     if(classExists || clas) {
@@ -17,6 +17,7 @@ const addClass = async (req, res) => {
         description,
         code,
         createdBy,
+        instructorName
     });
 
     if(ClassData) {
@@ -85,7 +86,8 @@ const enrolledClasses = async (req, res) => {
                 title : obj.title,
                 code : obj.code,
                 description : obj.description,
-                id : obj.createdBy
+                id : obj.createdBy,
+                intructorName : obj.instructorName
             }
             enrolledClass.push(data);
         }
@@ -105,7 +107,8 @@ const teachingClasses = async (req, res) => {
                 title : obj.title,
                 code : obj.code,
                 description : obj.description,
-                id : obj.createdBy
+                id : obj.createdBy,
+                instructorName : obj.instructorName
             }
             teachingClass.push(data);
         }
@@ -163,9 +166,19 @@ const getEnrolledStudents = async (req, res) => {
     res.send(d);
 };
 
+const getInstructor = async (req,res) => {
+    let {instructorId} = req.body;
+    let user = await User.findById({_id : instructorId});
+    let data = {
+        name : user.name,
+        email : user.email
+    }
+    res.send(data);
+}
 
 
 
 
 
-module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails, unenrollClass, removeClass, getEnrolledStudents};
+
+module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails, unenrollClass, removeClass, getEnrolledStudents, getInstructor};

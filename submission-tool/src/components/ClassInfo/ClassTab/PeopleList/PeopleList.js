@@ -1,5 +1,5 @@
 import React from 'react';
-import { List} from 'antd';
+import { Divider, List, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons'
 
 class PeopleList extends React.Component {
@@ -10,19 +10,32 @@ class PeopleList extends React.Component {
 
     render() {
         return (
-            <List
-                itemLayout="horizontal"
-                dataSource={this.state.enrolledStudents}
-                renderItem={item => (
+            <>
+                <Typography style = {{fontWeight : 'bold', fontSize : 20}}>
+                    Instructor
+                </Typography>
                 <List.Item>
                     <List.Item.Meta
                         avatar = {<UserOutlined style = {{fontSize : 25, marginTop : 5}}/>}
-                        title = {item.name}
-                        description = {item.email}
+                        title = {this.props.data.name}
+                        description = {this.props.data.email}
                     />
                 </List.Item>
-                )}
-            />
+                <Divider />
+                <List
+                    itemLayout="horizontal"
+                    dataSource={this.state.enrolledStudents}
+                    renderItem={item => (
+                    <List.Item>
+                        <List.Item.Meta
+                            avatar = {<UserOutlined style = {{fontSize : 25, marginTop : 5}}/>}
+                            title = {item.name}
+                            description = {item.email}
+                        />
+                    </List.Item>
+                    )}
+                />
+            </>
         )
     }
 }

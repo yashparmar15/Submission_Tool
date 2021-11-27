@@ -10,6 +10,8 @@ import LoginPage from './containers/LoginPage/LoginPage';
 import RegisterPage from './containers/RegisterPage/RegisterPage';
 import React from 'react';
 import AttendQuiz from './containers/AttendQuiz/AttendQuiz';
+import SubmitAssignment from './containers/SubmitAssignment/SubmitAssignment';
+import GradeAssignment from './containers/GradeAssignment/GradeAssignment';
 
 class App extends React.Component {
 
@@ -29,6 +31,8 @@ class App extends React.Component {
           <Route path = '/join_course' element = {<JoinClass/>}/>
           <Route path = "/create_course" element = {<CreateClass/>}/>
           <Route path = {`/attend_quiz/:quiz_id`} element = {<AttendQuiz />} />
+          <Route path = {`/course/:id/assignment/:id`} element = {<SubmitAssignment />} />
+          <Route path = {`/course/:id/assignment/:id/grade`} element = {<GradeAssignment />} />
           <Route path = "*" element = {<PageNotFound/>} />
           </> : null}
           <Route path = "/login" element = {<LoginPage/>} />

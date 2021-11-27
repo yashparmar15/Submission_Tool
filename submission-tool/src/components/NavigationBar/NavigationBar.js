@@ -2,7 +2,7 @@ import React from "react";
 
 import { Layout, Menu, Affix } from 'antd';
 import {
-  PieChartOutlined,
+  HomeOutlined, 
   FileOutlined,
   TeamOutlined,
   UserOutlined,
@@ -45,7 +45,7 @@ class NavigationBar extends React.Component {
                 <Affix>
                 <Menu theme="dark" mode="inline">
                     {this.state.isAuthenticated ?<>
-                    <Menu.Item key="1" icon={<PieChartOutlined />}>
+                    <Menu.Item key="1" icon={<HomeOutlined />}>
                         <Link to = "/courses">Classes</Link>
                     </Menu.Item>
                     <SubMenu key="sub1" icon={<UserOutlined />} title="Teaching">

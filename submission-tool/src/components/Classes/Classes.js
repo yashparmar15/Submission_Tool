@@ -12,7 +12,7 @@ class Classes extends React.Component {
         teaching : [],
         classes : [],
         userId : JSON.parse(localStorage.getItem('userInfo'))._id,
-        loading : true
+        loading : true,
     }
 
     error = (err) => {
@@ -85,7 +85,7 @@ class Classes extends React.Component {
                         <List.Item key = {item.code}>
                             <ClassCard 
                                 name = {item.title} 
-                                description = {item.description} 
+                                description = {item.instructorName} 
                                 code = {item.code}
                                 id = {item.id}
                                 handleRemoveClass = {this.handleRemoveClass}
