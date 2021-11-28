@@ -85,16 +85,24 @@ class SubmitAssignment extends React.Component {  // Page for submitting the ass
             message.error("Please Upload file!");
             return;
         }
+        let data = {
+            userId : JSON.parse(localStorage.getItem('userInfo'))._id,
+            postId : this.state.postId,
+            name : JSON.parse(localStorage.getItem('userInfo')).name,
+            email : JSON.parse(localStorage.getItem('userInfo')).email,
+            marks : -1,
+            file : this.state.file
+        }
         let formdata = new FormData();
         formdata.append("userId", JSON.parse(localStorage.getItem('userInfo'))._id);
-        formdata.append("postId", this.state.post._id);
+        formdata.append("postId", this.state.postId);
         formdata.append("name", JSON.parse(localStorage.getItem('userInfo')).name)
         formdata.append("email", JSON.parse(localStorage.getItem('userInfo')).email)
         formdata.append("marks", -1);
         formdata.append("file", this.state.file);
-
-        let data = await axios.post('/api/posts/upload_assignment', formdata);
-        if(data.data === "success") {
+        console.log(formdata,data);
+        let d = await axios.post('/api/posts/upload_assignment', formdata);
+        if(d.data === "success") {
             message.success("Uploaded Successfully");
         } else {
             message.error("Some error occured");
@@ -139,7 +147,7 @@ class SubmitAssignment extends React.Component {  // Page for submitting the ass
                                     <b>Deadline : </b> {this.state.post.deadline}
                                     <br/> 
                                     {this.state.instructor ? <b> Maximum Marks :- {this.state.post.marks} </b> :
-                                    this.state.userSubmittedDetails.marks === -1 ?
+                                    !this.state.userSubmittedDetails || this.state.userSubmittedDetails.marks === -1 ?
                                         <> <b>Marks :</b> Not Assigned <b> / {this.state.post.marks} </b> </>
                                     :   <p> <b>Marks :</b> <b> {this.state.userSubmittedDetails.marks} </b> / {this.state.post.marks} </p>}
                                 </Typography>
@@ -167,7 +175,7 @@ class SubmitAssignment extends React.Component {  // Page for submitting the ass
                                 </Link>
                                 : <>
                                     <label>
-                                        <input type="file" id="file" aria-label="File browser example"/>
+                                        <input onChange = {this.changeFile} type="file" id="file" aria-label="File browser example"/>
                                         <span></span>
                                     </label>
                                     <br/>
