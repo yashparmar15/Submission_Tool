@@ -104,8 +104,6 @@ class SubmitAssignment extends React.Component {  // Page for submitting the ass
 
     render() {
 
-        const title = this.state.title
-
         let content = <Layout>
             <Row type="flex" justify="center">
                 <Col span={24}>

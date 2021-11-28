@@ -32,7 +32,6 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
 
     tick = () => {
         let date = this.state.post.startTime;
-        let time = this.state.post.timeAlloted;
         let curTime = moment(Date.now()).locale("en").format("MMM DD, YYYY HH:mm");
         if(curTime >= date) {
             this.setState({disable : false});
@@ -84,7 +83,6 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
         let postId = this.state.postId;
         this.setState({loadingQuiz : true});
         let questions = await (await axios.post('/api/posts/get_questions', {postId})).data;
-        let time = this.state.timer;
         this.interval = setInterval(() => {
             this.updateTimer()
         }, 1000 );
@@ -108,7 +106,7 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
         if(this.state.curQuestionIndex === 0) {
             let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
             let postId = this.state.postId;
-            let res = await axios.post('/api/posts/completed_quiz', {userId, postId});
+            await axios.post('/api/posts/completed_quiz', {userId, postId});
         }
         this.setState({curQuestionIndex : this.state.curQuestionIndex + 1});
         this.setState({selectedOption : ""});
@@ -124,7 +122,7 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
         if(this.state.curQuestionIndex === 0) {
             let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
             let postId = this.state.postId;
-            let res = await axios.post('/api/posts/completed_quiz', {userId, postId});
+            await axios.post('/api/posts/completed_quiz', {userId, postId});
         }
         this.setState({submitting : false});
         alert("Successfully Completed, You can see your marks on classroom as soon as your instructor posts.");

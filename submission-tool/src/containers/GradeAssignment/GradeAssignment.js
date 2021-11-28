@@ -60,7 +60,7 @@ const EditableCell = ({   // checking editable cell or not for assigning marks
 
   if (editable) {
     if(title === 'Submitted Assignment') childNode = 
-        <a target = "_blank" href = {`/documents/${record.file}`}>Assignment</a>;
+        <a rel="noreferrer" target = "_blank" href = {`/documents/${record.file}`}>Assignment</a>;
     else {
         childNode = editing ? (
         <Form.Item
