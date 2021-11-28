@@ -14,6 +14,8 @@ class QuizQuestion extends React.Component {    // Question Component for quiz
                 {option}
             </Radio.Button>
         ))
+        let s = this.props.timer;
+        const time = (s-(s%=60))/60+(9<s?':':':0')+s
 
         return (
             <>
@@ -25,7 +27,7 @@ class QuizQuestion extends React.Component {    // Question Component for quiz
                     backgroundColor : '#b0b0b0',
                     marginBottom : 20
                 }}>
-                    {this.props.time}
+                    {time}
                 </Typography>
                 <Typography
                     style = {{

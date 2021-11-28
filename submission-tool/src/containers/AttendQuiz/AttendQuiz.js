@@ -6,6 +6,7 @@ import axios from "axios";
 import SpinCenter from "../../components/Util/SpinCenter";
 import ViewScore from "../../components/AttendQuiz/ViewScore";
 import GradeQuiz from "../../components/AttendQuiz/GradeQuiz";
+import moment from "moment";
 
 class AttendQuiz extends React.Component {   // Page to atteding the quiz
 
@@ -25,6 +26,17 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
         selectedOption : "",
         submitting : false,
         alreadyCompleted : false,
+        disable : true,
+        timer : 0
+    }
+
+    tick = () => {
+        let date = this.state.post.startTime;
+        let time = this.state.post.timeAlloted;
+        let curTime = moment(Date.now()).locale("en").format("MMM DD, YYYY HH:mm");
+        if(curTime >= date) {
+            this.setState({disable : false});
+        }
     }
 
     componentDidMount = async () => {  // fetch and validating information for attending the quiz
@@ -34,6 +46,8 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
         this.setState({classCode : classCode});
         let post = await axios.post('/api/posts/fetchpost', {postId, classCode});
         this.setState({post : post.data});
+        this.setState({timer : parseInt(post.data.timeAlloted) * 60})
+        console.log(this.state.timer);
         this.setState({title : post.data.title});
         let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
         let check = await axios.post('/api/posts/is_instructor', {classCode, userId});
@@ -55,13 +69,25 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
             window.location = "/not_found";
             return;
         }
+        this.interval = setInterval(() => this.tick(), 1000);
         this.setState({loading : false});
+    }
+
+    updateTimer = () => {
+        if(this.state.timer === 0) {
+            this.handleSubmitQuiz();
+        }
+        this.setState({timer : this.state.timer - 1});
     }
 
     handleEnterQuiz = async () => {
         let postId = this.state.postId;
         this.setState({loadingQuiz : true});
         let questions = await (await axios.post('/api/posts/get_questions', {postId})).data;
+        let time = this.state.timer;
+        this.interval = setInterval(() => {
+            this.updateTimer()
+        }, 1000 );
         this.setState({totalquestions : questions.length});
         this.setState({questions : questions});
         this.setState({loadingQuiz : false});
@@ -95,6 +121,11 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
     handleSubmitQuiz = async () => {
         this.setState({submitting : true})
         this.saveUserResponse();
+        if(this.state.curQuestionIndex === 0) {
+            let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
+            let postId = this.state.postId;
+            let res = await axios.post('/api/posts/completed_quiz', {userId, postId});
+        }
         this.setState({submitting : false});
         alert("Successfully Completed, You can see your marks on classroom as soon as your instructor posts.");
         window.location = `/course/${this.state.classCode}`
@@ -121,6 +152,7 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
                         time = {this.state.post.timeAlloted}
                         optionSelected = {this.optionSelected}
                         next = {true}
+                        timer = {this.state.timer}
                     />
                 :   <QuizQuestion 
                         question = {curQuestion.question}
@@ -133,11 +165,13 @@ class AttendQuiz extends React.Component {   // Page to atteding the quiz
                         optionSelected = {this.optionSelected}
                         submitting = {this.state.submitting}
                         next = {false}
+                        timer = {this.state.timer}
                     />       
             :<GeneralInstruction 
                 data = {this.state.post}
                 handleEnterQuiz = {this.handleEnterQuiz}
                 loadingQuiz = {this.state.loadingQuiz}
+                disable = {this.state.disable}
             />}
         </div>
 

@@ -51,6 +51,7 @@ const fetchPost = async (req, res) => {         // fetching all useful informati
                 deadline : postData.deadline,
                 startTime : postData.startTime,
                 timeAlloted : postData.timeAlloted,
+                endTime : postData.endTime,
                 questions : postData.questions,
                 comments : postData.comments,
                 completedBy : postData.completedBy,

@@ -34,6 +34,7 @@ class GeneralInstruction extends React.Component {    // for general intruction 
                     </ul>
                 </Typography>
                 <Button 
+                    disabled = {this.props.disable}
                     style = {{
                         marginTop : 10
                     }}

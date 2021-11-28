@@ -84,11 +84,11 @@ class GenerateQuiz extends React.Component {  // for generating the quiz
             description : this.state.description,
             startTime : this.props.startingTime,
             timeAlloted : this.state.timeAlloted,
+            endTime : this.props.endingTime,
             questions : finalQuestions
         }
         this.setState({loading : true});
         let classId = this.state.classId;
-        console.log(data);
         let postId = this.state.postId;
         // add or upload the post depending on whether the post is alread created or not
         let res = await axios.post('/api/posts/create_quiz',{data,classId,postId});  
