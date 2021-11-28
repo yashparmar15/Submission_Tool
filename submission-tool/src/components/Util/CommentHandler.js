@@ -2,7 +2,7 @@ import React from 'react';
 import {Comment, Form, Input, Button, Affix, List} from 'antd';
 import {UserOutlined} from '@ant-design/icons';
 
-class CommmentHandler extends React.Component {
+class CommmentHandler extends React.Component { // for handling comments for the particular post
     
 
     state = {

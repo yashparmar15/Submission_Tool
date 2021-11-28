@@ -1,5 +1,6 @@
 import React from "react";
-import {Row, Col, Input, Typography, Button, Layout, Affix, Tooltip, InputNumber, message} from 'antd';
+import {Row, Col, Input, Typography, Button, Layout, Affix, Tooltip, InputNumber,
+         message} from 'antd';
 import InputField from "../../../../Util/InputField";
 import InputTextArea from "../../../../Util/InputTextArea";
 import MultipleChoice from "../../../../Util/MultipleChoice";
@@ -8,7 +9,7 @@ import axios from 'axios';
 
 const {Content} = Layout;
 
-class GenerateQuiz extends React.Component {
+class GenerateQuiz extends React.Component {  // for generating the quiz
 
     state = {
         title : this.props.data.title,
@@ -32,7 +33,7 @@ class GenerateQuiz extends React.Component {
         loading : false
     }
 
-    saveQuizChanges = async () => {
+    saveQuizChanges = async () => {   // for saving the changes that are done till the particular time
         let questions = [...this.state.questions];
         let finalQuestions = []
         for(let i = 0 ; i < questions.length ; i++) {
@@ -89,13 +90,14 @@ class GenerateQuiz extends React.Component {
         let classId = this.state.classId;
         console.log(data);
         let postId = this.state.postId;
-        let res = await axios.post('http://localhost:3000/api/posts/create_quiz',{data,classId,postId});
+        // add or upload the post depending on whether the post is alread created or not
+        let res = await axios.post('/api/posts/create_quiz',{data,classId,postId});  
         this.setState({postId : res.data});
         this.setState({loading : false});
         message.success("Successfully saved!")
     }
 
-    addField = () => {
+    addField = () => {   // for adding new Field in quiz
         let arr = [...this.state.questions];
         let obj = {
             text : "",
@@ -112,7 +114,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    deleteField = (key) => {
+    deleteField = (key) => {       // for deleting the field
         let arr = [...this.state.questions];
         this.setState({undo : arr});
         arr = arr.filter((val) => val.key !== key);
@@ -122,7 +124,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions: arr});
     }
 
-    changeLabel = (val,key) => {
+    changeLabel = (val,key) => {      // to change the title of the quiz
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key)
@@ -133,7 +135,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    changeScore = (score,key) => {
+    changeScore = (score,key) => {    // for changing the score of the particular question
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key)
@@ -144,7 +146,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    changeDescription = (val,key) => {
+    changeDescription = (val,key) => {  // for changing the description of the question
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key)
@@ -155,7 +157,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    changeOptionLabel = (val,key,id) => { 
+    changeOptionLabel = (val,key,id) => {  // for changing the text of the particular option
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key){
@@ -172,7 +174,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    removeMultipleChoiceOption = (key,id) => {
+    removeMultipleChoiceOption = (key,id) => {  // for removing multiple choice options
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key){
@@ -189,7 +191,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    selectAnswerOption = (key,id) => {
+    selectAnswerOption = (key,id) => {   // for selectinng the answer of the particular question
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key){
@@ -207,7 +209,7 @@ class GenerateQuiz extends React.Component {
         this.setState({questions : arr});
     }
 
-    addMultipleChoiceOption = (key) => { 
+    addMultipleChoiceOption = (key) => {  // adding option in the question
         let arr = [...this.state.questions];
         arr = arr.map(data => {
             if(data.key === key) {
@@ -321,7 +323,6 @@ class GenerateQuiz extends React.Component {
                         <Button type="dashed" block style = {{marginTop : 30}} onClick = {this.addField}>
                             Add Question
                         </Button>
-                        {/* <Button type = "primary">Save Quiz</Button> */}
                     </Affix>
                     {questions}
                     <Button 

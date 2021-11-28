@@ -20,7 +20,7 @@ app.use("/public", express.static("public"));
 const PORT = process.env.PORT || 3000;
 
 
-mogoose.connect(
+mogoose.connect(   // connecting with mongo url
 	keys.MONGO_URI,
     { useNewUrlParser: true, useUnifiedTopology: true }
 	).then(() => {

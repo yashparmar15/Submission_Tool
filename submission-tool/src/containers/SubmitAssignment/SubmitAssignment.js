@@ -9,10 +9,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 const {Content} = Layout;
-const {Paragraph} = Typography;
 
 
-class SubmitAssignment extends React.Component {
+class SubmitAssignment extends React.Component {  // Page for submitting the assignments
 
     state = {
         post : {},
@@ -27,21 +26,24 @@ class SubmitAssignment extends React.Component {
     }
 
     componentDidMount = async () => {
+        // for fetching and validating
         let postId = window.location.pathname.substr(26);
         this.setState({postId : postId});
         let classCode = window.location.pathname.substr(8,6);
         this.setState({classCode : classCode});
-        let post = await axios.post('http://localhost:3000/api/posts/fetchpost', {postId, classCode});
+        let post = await axios.post('/api/posts/fetchpost', {postId, classCode});  // fetching post information
         this.setState({post : post.data});
         this.setState({title : post.data.title});
         let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-        let check = await axios.post('http://localhost:3000/api/posts/is_instructor', {classCode, userId});
+        let check = await axios.post('/api/posts/is_instructor', {classCode, userId}); 
+        // checking whether current user is instructor or not
         this.setState({instructor : check.data});
         this.setState({comments : post.data.comments});
-        let checkUserEnrolled = await axios.post('http://localhost:3000/api/posts/check_enrolled', 
+        let checkUserEnrolled = await axios.post('/api/posts/check_enrolled', 
             {userId, classCode}
         )
-        let userDetail = await axios.post('http://localhost:3000/api/posts/get_submitted_details',{userId, postId});
+        let userDetail = await axios.post('/api/posts/get_submitted_details',{userId, postId});
+        // fetching submitted details of current user, if already submitted
         this.setState({userSubmittedDetails : userDetail.data[0]});
         if(post.data === "error" || checkUserEnrolled.data === "error") {
             window.alert("The URL you are trying to access is not exist")
@@ -51,7 +53,7 @@ class SubmitAssignment extends React.Component {
         this.setState({loading : false});
     }
 
-    addComment = async () => {
+    addComment = async () => {  // for adding comments in the post
         // console.log(value)
         if(this.state.value !== "") {
             let tempPost = {...this.state.post}
@@ -70,7 +72,7 @@ class SubmitAssignment extends React.Component {
                 comments : comments
             }
             console.log(updatedValue);
-            await axios.post('http://localhost:3000/api/posts/add_comment', updatedValue)
+            await axios.post('/api/posts/add_comment', updatedValue)
         }
     }
 
@@ -78,7 +80,7 @@ class SubmitAssignment extends React.Component {
         this.setState({file : value.target.files[0]});
     }
 
-    uploadFile = async () => {
+    uploadFile = async () => {   // for uploading file in the server
         if(this.state.file === null) {
             message.error("Please Upload file!");
             return;
@@ -91,7 +93,7 @@ class SubmitAssignment extends React.Component {
         formdata.append("marks", -1);
         formdata.append("file", this.state.file);
 
-        let data = await axios.post('http://localhost:3000/api/posts/upload_assignment', formdata);
+        let data = await axios.post('/api/posts/upload_assignment', formdata);
         if(data.data === "success") {
             message.success("Uploaded Successfully");
         } else {

@@ -6,7 +6,7 @@ import axios from 'axios';
 const {Content} = Layout;
 
 
-class LoginPage extends React.Component {
+class LoginPage extends React.Component {   // Login Page of the tool
 
     state = {
         isAuthenticated : localStorage.getItem('userInfo')
@@ -26,12 +26,12 @@ class LoginPage extends React.Component {
         });
     };
 
-    submitHandler = async (values) => {
+    submitHandler = async (values) => {  // handling login
         
         try {
             const email = values.email;
             const password = values.password;
-            const {data} = await axios.post('http://localhost:3000/api/users/login', {
+            const {data} = await axios.post('/api/users/login', {
                 email,password
             });
             if(data === "Error") {

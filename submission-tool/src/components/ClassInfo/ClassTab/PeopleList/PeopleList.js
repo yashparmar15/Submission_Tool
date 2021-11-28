@@ -2,7 +2,7 @@ import React from 'react';
 import { Divider, List, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons'
 
-class PeopleList extends React.Component {
+class PeopleList extends React.Component {  // displaying all the teachers as well students who are enrolled in the class
 
     state = {
        enrolledStudents : this.props.enrolledStudents

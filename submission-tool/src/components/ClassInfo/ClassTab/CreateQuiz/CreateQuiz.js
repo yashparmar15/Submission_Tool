@@ -4,7 +4,7 @@ import LandingForm from './LandingForm/LandingForm';
 import GenerateQuiz from './GenerateQuiz/GenerateQuiz';
 import moment from 'moment';
 
-class CreateQuiz extends React.Component{
+class CreateQuiz extends React.Component{   // for creating quiz
 
     state = {
         data : null,

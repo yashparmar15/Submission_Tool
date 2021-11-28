@@ -21,11 +21,13 @@ class AppBuilder extends React.Component {
         <Layout className="site-layout">
           <Affix>
           <Header className="site-layout-background" style={{ padding: 0 }}>
-          <PageHeader
-            className="site-page-header"
-            onBack={() => window.location = '/courses'}
-            title= {this.props.heading}
-          />
+          {this.props.block ? <PageHeader /> :
+            <PageHeader
+              className="site-page-header"
+              onBack={() => window.history.back()}
+              title= {this.props.heading}
+            />
+          }
           </Header>
           </Affix>
           <Content style={{ margin: '0 16px' }}>

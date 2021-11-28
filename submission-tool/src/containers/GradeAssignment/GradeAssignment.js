@@ -1,10 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { Table, Input, Form, Typography, Button, InputNumber, message } from 'antd';
+import { Table, Form, Typography, Button, InputNumber, message } from 'antd';
 import './GradeAssignment.css'
 import AppBuilder from '../AppBuilder/AppBuilder';
 import axios from 'axios';
 import SpinCenter from '../../components/Util/SpinCenter';
 const EditableContext = React.createContext(null);
+
+
+// Page for grading the assignments
 
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
@@ -17,7 +20,7 @@ const EditableRow = ({ index, ...props }) => {
   );
 };
 
-const EditableCell = ({
+const EditableCell = ({   // checking editable cell or not for assigning marks
   marks,
   title,
   editable,
@@ -44,7 +47,7 @@ const EditableCell = ({
     });
   };
 
-  const save = async () => {
+  const save = async () => {  // saving the assigned marks
     try {
       const values = await form.validateFields();
       toggleEdit();
@@ -57,7 +60,7 @@ const EditableCell = ({
 
   if (editable) {
     if(title === 'Submitted Assignment') childNode = 
-        <a target = "_blank" href = {`http://localhost:3000/documents/${record.file}`}>Assignment</a>;
+        <a target = "_blank" href = {`/documents/${record.file}`}>Assignment</a>;
     else {
         childNode = editing ? (
         <Form.Item
@@ -97,7 +100,7 @@ class GradeAssignment extends React.Component {
         count: 2,
         post : {}
     }
-    this.columns = [
+    this.columns = [  // columns of table 
       {
         title: 'Name',
         dataIndex: 'name',
@@ -123,16 +126,18 @@ class GradeAssignment extends React.Component {
   }
 
   componentDidMount = async () => {
+    // validating the user info for the given page, like if the current user is not the instructor in the class
+    // then the user will not be able to see it
     let postId = window.location.pathname.substr(26,24);
     this.setState({postId : postId});
     let classCode = window.location.pathname.substr(8,6);
-    let post = await axios.post('http://localhost:3000/api/posts/fetchpost', {postId, classCode});
+    let post = await axios.post('/api/posts/fetchpost', {postId, classCode});
     this.setState({post : post.data});
     this.setState({classCode : classCode});
     let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-    let check = await axios.post('http://localhost:3000/api/posts/is_instructor', {classCode, userId});
+    let check = await axios.post('/api/posts/is_instructor', {classCode, userId});
     this.setState({instructor : check.data});
-    let checkUserEnrolled = await axios.post('http://localhost:3000/api/posts/check_enrolled', 
+    let checkUserEnrolled = await axios.post('/api/posts/check_enrolled', 
         {userId, classCode}
     )
     if(checkUserEnrolled.data === "error" || !this.state.instructor) {
@@ -140,7 +145,7 @@ class GradeAssignment extends React.Component {
         window.location = "/not_found";
         return;
     }
-    let data = await axios.post('http://localhost:3000/api/posts/assignments', {postId});
+    let data = await axios.post('/api/posts/assignments', {postId});
     this.setState({dataSource : data.data});
     this.setState({loading : false});
  }
@@ -160,7 +165,7 @@ class GradeAssignment extends React.Component {
           uploadedAssignments : this.state.dataSource,
           postId : this.state.postId
       }
-      let res = await axios.post('http://localhost:3000/api/posts/save_marks', data);
+      let res = await axios.post('/api/posts/save_marks', data);
       if(res.data === "saved") {
           message.success("Saved Successfully");
       } else {
@@ -198,7 +203,7 @@ class GradeAssignment extends React.Component {
             fontFamily :'monospace',
             marginBottom : 10,  
         }}>
-            Click on the <b>-1</b> to assign marks to students.
+            Click on the <b>Assign Marks Column</b> to assign marks to students.
             Make sure to click on <b>Save Changes</b> button to save changes.
             Maximum Marks : <b>{this.state.post.marks}</b>
         </Typography>

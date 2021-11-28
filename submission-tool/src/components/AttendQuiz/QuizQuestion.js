@@ -1,9 +1,19 @@
 import React from "react";
 import {Button, Typography, Radio, Space} from 'antd';
 
-class QuizQuestion extends React.Component {
+class QuizQuestion extends React.Component {    // Question Component for quiz
 
     render() {
+        
+        const option = this.props.options.map(option => (
+            <Radio.Button 
+                key = {option}
+                style = {{width : '60vw' , height : 'auto'}}
+                value={option}
+            >   
+                {option}
+            </Radio.Button>
+        ))
 
         return (
             <>
@@ -15,7 +25,7 @@ class QuizQuestion extends React.Component {
                     backgroundColor : '#b0b0b0',
                     marginBottom : 20
                 }}>
-                    10:00
+                    {this.props.time}
                 </Typography>
                 <Typography
                     style = {{
@@ -25,6 +35,7 @@ class QuizQuestion extends React.Component {
                     }}
                 >
                     {this.props.quesNo}. {this.props.question}
+                    <i style = {{fontSize : 12}}>(Marks : {this.props.marks})</i>
                 </Typography>
                 <Typography
                     style = {{
@@ -34,20 +45,16 @@ class QuizQuestion extends React.Component {
                         marginBottom : 10
                     }}
                 >
-                    decription goes here
+                    {this.props.description}
                 </Typography>
-                <Radio.Group buttonStyle="solid">
+                <Radio.Group 
+                    buttonStyle="solid"
+                    onChange = {this.props.optionSelected.bind(this.props.quesNo)}
+                >
                     <Space 
                         direction = "vertical"
                     >
-                    <Radio.Button 
-                        style = {{width : '60vw' , height : 'auto'}}
-                        value="a"
-                    >   Hangzhou
-                    </Radio.Button>
-                    <Radio.Button value="b">Shanghai</Radio.Button>
-                    <Radio.Button value="c">Beijing</Radio.Button>
-                    <Radio.Button value="d">Chengdu</Radio.Button>
+                        {option}
                     </Space>
                 </Radio.Group>
                 <br/>
@@ -57,7 +64,7 @@ class QuizQuestion extends React.Component {
                     onClick = {this.props.next ? 
                                     this.props.handleNextQuestion.bind() : 
                                     this.props.handleSubmitQuiz.bind()}
-                >   {this.props.next ? "Next" : "Submit Quiz"}
+                >   {this.props.next ? "Next" : this.props.submitting ? "Submitting..." : "Submit Quiz"}
                 </Button>
             </>
         )

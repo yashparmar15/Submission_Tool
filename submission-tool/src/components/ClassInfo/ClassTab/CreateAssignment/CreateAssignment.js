@@ -1,12 +1,10 @@
 import React from 'react';
-import { Form, Input, Button, DatePicker, InputNumber, TimePicker, Layout, Col, Row, Typography} from 'antd';
+import { Form, Input, Button, DatePicker, InputNumber, TimePicker, 
+        Layout, Col, Row, Typography} from 'antd';
 const {Content} = Layout;
 
 
-class CreateAssignment extends React.Component {
-
-
-    
+class CreateAssignment extends React.Component { // page for creating the assignment
 
     render() {
         return (

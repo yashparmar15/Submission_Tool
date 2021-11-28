@@ -7,7 +7,7 @@ import axios from "axios";
 const {Content} = Layout;
 
 
-class RegisterPage extends React.Component {
+class RegisterPage extends React.Component {  // page for register the user
 
     state = {
         loading : false
@@ -45,7 +45,7 @@ class RegisterPage extends React.Component {
                 return;
             }
             try {
-                const {data} = await axios.post('http://localhost:3000/api/users', {
+                const {data} = await axios.post('/api/users', {
                     name,email,password
                 });
                 this.setState({loading : false});

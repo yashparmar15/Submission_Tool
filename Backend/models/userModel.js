@@ -29,6 +29,12 @@ const userSchema = mongoose.Schema(
         enrolled : {
             type : [mongoose.Schema.Types.ObjectId],
             ref : 'Class'
+        },
+        responses : {
+            type : [{
+                quesId : mongoose.Schema.Types.ObjectId,
+                response : String
+            }]
         }
     }
 );

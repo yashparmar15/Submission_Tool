@@ -3,7 +3,7 @@ import ClassTab from "../../components/ClassInfo/ClassTab/ClassTab";
 import AppBuilder from "../AppBuilder/AppBuilder";
 import axios from "axios";
 
-class ClassInfo extends React.Component {
+class ClassInfo extends React.Component {  // displaying class info
 
     state = {
         classData : {
@@ -13,7 +13,7 @@ class ClassInfo extends React.Component {
 
     componentDidMount = async () => {
         let code = window.location.pathname.substr(8);
-        let classData = await axios.post('http://localhost:3000/api/class/get_details', {code});
+        let classData = await axios.post('/api/class/get_details', {code}); // fetching details of class
         if(classData.data === "error") {
             window.location = '/not_found';
             return;

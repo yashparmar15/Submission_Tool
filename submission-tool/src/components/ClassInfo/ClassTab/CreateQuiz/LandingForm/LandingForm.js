@@ -1,11 +1,13 @@
 import React from "react";
-import {Layout, Button, Typography,Form, Input, DatePicker, TimePicker, InputNumber} from 'antd';
+import {Layout, Button, Typography,Form, Input, DatePicker, TimePicker, 
+        InputNumber} from 'antd';
 
 const {Content} = Layout;
 
 
-class LandingForm extends React.Component {
+class LandingForm extends React.Component {   // landing page for creating quiz
 
+    // contains the landing form on the quiz
     render() {
         return (
             <Content

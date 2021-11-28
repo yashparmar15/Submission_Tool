@@ -49,6 +49,16 @@ const postSchema = mongoose.Schema(
                 marks : Number,
                 key : String
             }]
+        },
+        completedBy : {
+            type : [{
+                id : mongoose.Schema.Types.ObjectId,
+                score : Number
+            }],
+            ref : 'User'
+        },
+        totalMarks : {
+            type : Number
         }
     }
 )

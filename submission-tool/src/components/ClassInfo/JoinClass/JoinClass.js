@@ -4,7 +4,7 @@ import React from "react";
 import AppBuilder from '../../../containers/AppBuilder/AppBuilder';
 import axios from 'axios';
 
-class JoinClass extends React.Component {
+class JoinClass extends React.Component {  // page for joining the class
 
     state = {
         code : ""
@@ -30,7 +30,7 @@ class JoinClass extends React.Component {
             userId : JSON.parse(localStorage.getItem('userInfo'))._id
         }
 
-        let res = await axios.post('http://localhost:3000/api/class/join', data);
+        let res = await axios.post('/api/class/join', data);
         // console.log(res.data);
         switch(res.data) {
             case "error": {

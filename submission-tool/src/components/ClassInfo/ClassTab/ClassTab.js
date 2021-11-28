@@ -9,7 +9,7 @@ import SpinCenter from '../../Util/SpinCenter';
 
 const { TabPane } = Tabs;
 
-class ClassTab extends React.Component {
+class ClassTab extends React.Component { // for displaying all the information related to class
 
   state = {
     curUser : JSON.parse(localStorage.getItem('userInfo'))._id,
@@ -33,7 +33,7 @@ class ClassTab extends React.Component {
       window.location.reload();
   };
 
-  createAssignment = async (values) => {
+  createAssignment = async (values) => {  // creating assignment
       let date = values.date;
       let deadline = date.locale("en").format("MMM DD, YYYY").toString()
       let time = values.time.format('HH:mm')
@@ -52,28 +52,30 @@ class ClassTab extends React.Component {
           deadline : deadline,
       }
 
-      let res = await axios.post('http://localhost:3000/api/posts', data);
+      let res = await axios.post('/api/posts', data);
       if(res.data === "Success") {
           this.openNotificationWithIcon("success");
           return;
       }
   }   
 
-  componentDidMount = async () => {
+  componentDidMount = async () => {  
+    // checking all the validation for the given link, like if the user is not enrolled in the class
+    // then he/she will not be able to see content of class
     let code = window.location.pathname.substr(8);
-    let classData = await axios.post('http://localhost:3000/api/class/get_details', {code});
+    let classData = await axios.post('/api/class/get_details', {code});
     if(classData.data === "error") {
       window.location = '/not_found';
       return;
     }
     this.setState({classData : classData.data});
     let classId = this.state.classData._id;
-    let posts = await axios.post('http://localhost:3000/api/posts/fetchposts', {classId});
+    let posts = await axios.post('/api/posts/fetchposts', {classId}); // fetching post details
     this.setState({posts : posts.data});
-    let data = await axios.post('http://localhost:3000/api/class/get_enrolled_students', {classId});
+    let data = await axios.post('/api/class/get_enrolled_students', {classId});
     this.setState({enrolledStudents : data.data});
     let instructorId = this.state.classData.createdBy;
-    let instuctorData = await axios.post('http://localhost:3000/api/class/get_instructor', {instructorId});
+    let instuctorData = await axios.post('/api/class/get_instructor', {instructorId});
     this.setState({instructor : instuctorData.data});
     this.setState({loading : false});
   }

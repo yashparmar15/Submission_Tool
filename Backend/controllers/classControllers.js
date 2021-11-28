@@ -4,7 +4,7 @@ const Class = require('../models/classModel');
 const { Mongoose } = require('mongoose');
 
 
-const addClass = async (req, res) => {
+const addClass = async (req, res) => {     // for addig new Class in the collection
     const {title, description, code, createdBy, instructorName} = req.body;
     const classExists = await Class.findOne({ code });
     const clas = await Class.findOne({ title });
@@ -33,7 +33,7 @@ const addClass = async (req, res) => {
 };
 
 
-const joinClass = async (req, res) => {
+const joinClass = async (req, res) => {   // for joining new class
     const {code, userId} = req.body;
     let classExists = await Class.findOne({code : code});
     if(!classExists) {
@@ -74,7 +74,7 @@ const joinClass = async (req, res) => {
 };
 
 
-const enrolledClasses = async (req, res) => {
+const enrolledClasses = async (req, res) => { // for fetching all enrolled classes of user
     let {userId} = req.body;
     let user = await User.findOne({_id : userId});
     let enrolled = [...user.enrolled];
@@ -95,7 +95,7 @@ const enrolledClasses = async (req, res) => {
     res.send(enrolledClass);
 };
 
-const teachingClasses = async (req, res) => {
+const teachingClasses = async (req, res) => {    // for fetching all teaching classes of user
     let {userId} = req.body;
     let user = await User.findOne({_id : userId});
     let teaching = [...user.teaching];
@@ -116,7 +116,7 @@ const teachingClasses = async (req, res) => {
     res.send(teachingClass);
 };
 
-const getClassDetails = async (req, res) => {
+const getClassDetails = async (req, res) => {    // fetching all class details
     let {code} = req.body;
     let classDetail = await Class.findOne({code : code});
     if(!classDetail) {
@@ -126,7 +126,7 @@ const getClassDetails = async (req, res) => {
     res.send(classDetail);
 };
 
-const unenrollClass = async (req, res) => {
+const unenrollClass = async (req, res) => {      // for unrolling from the particular class
     let {id, code} = req.body;
     let user = await User.findOne({_id : id});
     let unenrollingClass = await Class.findOne({code});
@@ -141,8 +141,8 @@ const unenrollClass = async (req, res) => {
     res.send("success");
 };
 
-
-const removeClass = async (req, res) => {
+ 
+const removeClass = async (req, res) => {   // to delete particular class
     let {id, code} = req.body;
     let user = await User.findOne({_id : id});
     let removingClass = await Class.findOne({code});
@@ -158,7 +158,7 @@ const removeClass = async (req, res) => {
     res.send("success");
 };
 
-const getEnrolledStudents = async (req, res) => {
+const getEnrolledStudents = async (req, res) => {       // fetching all enrolled students in class
     let {classId} = req.body;
     let d = await User.find({enrolled : {
         $in : [classId]
@@ -166,7 +166,7 @@ const getEnrolledStudents = async (req, res) => {
     res.send(d);
 };
 
-const getInstructor = async (req,res) => {
+const getInstructor = async (req,res) => {   // for fetching intructor detail of class
     let {instructorId} = req.body;
     let user = await User.findById({_id : instructorId});
     let data = {
@@ -181,4 +181,5 @@ const getInstructor = async (req,res) => {
 
 
 
-module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails, unenrollClass, removeClass, getEnrolledStudents, getInstructor};
+module.exports = {addClass, joinClass, enrolledClasses, teachingClasses, getClassDetails,
+                     unenrollClass, removeClass, getEnrolledStudents, getInstructor};

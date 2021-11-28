@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const { isValidObjectId } = require('mongoose');
 const Question = require('../models/questionModel');
 
-const createPost = async (req, res) => {
+const createPost = async (req, res) => {         // creating post
     const {classId, title, description, marks, type, deadline} = req.body;
     let post = await Post.create({
         title,
@@ -20,7 +20,7 @@ const createPost = async (req, res) => {
     res.send("Success");
 };
 
-const fetchPosts = async (req, res) => {
+const fetchPosts = async (req, res) => {      // fetching all posts of given class
     const {classId} = req.body;
     let classData = await Class.findOne({_id : classId});
     let posts = [...classData.posts];
@@ -33,14 +33,14 @@ const fetchPosts = async (req, res) => {
 
 };
 
-const fetchPost = async (req, res) => {
+const fetchPost = async (req, res) => {         // fetching all useful information of particular post
     const {postId,classCode} = req.body;
     let classExists = await Class.findOne({classCode});
     if(!classExists) {
         res.send("error");
         return;
     }
-    if(isValidObjectId(postId.toString())) {
+    if(isValidObjectId(postId.toString())) {  // checking whether given Id is valid ID of not
         let postData = await Post.findOne({_id : postId});
         if(postData) {
             let data = {
@@ -52,7 +52,9 @@ const fetchPost = async (req, res) => {
                 startTime : postData.startTime,
                 timeAlloted : postData.timeAlloted,
                 questions : postData.questions,
-                comments : postData.comments
+                comments : postData.comments,
+                completedBy : postData.completedBy,
+                totalMarks : postData.totalMarks
             }
             res.send(data);
         } else {
@@ -63,7 +65,7 @@ const fetchPost = async (req, res) => {
     res.send("error");
 };
 
-const isInstructor = async (req, res) => {
+const isInstructor = async (req, res) => {     // cheching whether current user is intructor of the class or not
     const {classCode, userId} = req.body;
     let classData = await Class.findOne({classCode});
     if(classData.createdBy.toString() === userId.toString()) {
@@ -73,13 +75,13 @@ const isInstructor = async (req, res) => {
     }
 };
 
-const addComment = async (req, res) => {
+const addComment = async (req, res) => {    // for adding comments in assignments
     const {postId, comments} = req.body;
     await Post.findOneAndUpdate({_id : postId}, {comments : comments});
     res.send("success");
 }
 
-const checkEnrolled = async (req, res) => {
+const checkEnrolled = async (req, res) => {  // for checking current user is enrolled in the class or not
     const {userId, classCode} = req.body;
     let classId = await Class.findOne({code : classCode}).select("_id");
     let user = await User.findOne({_id : userId, enrolled : {
@@ -94,7 +96,7 @@ const checkEnrolled = async (req, res) => {
         res.send("success");
 }
 
-const uploadAssignment = async (req, res) => {
+const uploadAssignment = async (req, res) => {    // for uploading assignment
     let file = req.files.file;
     const {userId,postId, name, email, marks} = req.body;
     file.mv('public/documents/' + userId + postId + file.name, function(err){
@@ -118,14 +120,14 @@ const uploadAssignment = async (req, res) => {
 }
 
 
-const getAssignments = async (req, res) => {
+const getAssignments = async (req, res) => {    // for getting uploaded assignment details
     const {postId} = req.body;
     let post = await Post.findById({_id : postId});
     let uploadedAssignments = [...post.uploadedAssignments]
     res.send(uploadedAssignments);
 }
 
-const saveMarks = async (req, res) => {
+const saveMarks = async (req, res) => {       // for saving assignment marks
     const {uploadedAssignments, postId} = req.body;
     let post = await Post.findByIdAndUpdate({_id : postId}, {uploadedAssignments : uploadedAssignments});
     if(post)
@@ -134,7 +136,7 @@ const saveMarks = async (req, res) => {
         res.send("error");
 }
 
-const getSubmittedDetails = async (req,res) => {
+const getSubmittedDetails = async (req,res) => { // fetching submitted details of all students
     const {userId, postId} = req.body;
     let post = await Post.findById({_id : postId});
     let users = [...post.uploadedAssignments];
@@ -142,7 +144,7 @@ const getSubmittedDetails = async (req,res) => {
     res.send(user);
 }
 
-const createQuiz = async (req, res) => {
+const createQuiz = async (req, res) => {     // for creating quiz
     const {data, classId, postId} = req.body;
     const {title, description, startTime, timeAlloted, questions} = data;
     let type = "Quiz";
@@ -175,6 +177,72 @@ const createQuiz = async (req, res) => {
     res.send(post._id);
 }
 
+const getQuestions = async (req,res) => {      // for fetching all questions of quiz
+    const {postId} = req.body;
+    let questions = [];
+    let postQuestions = await Post.findById({_id : postId}).select("questions");
+    let questionIds = postQuestions.questions;
+    for(let i = 0 ; i < questionIds.length ; i++) {
+        let questionInfo = await Question.findById({_id : questionIds[i]})
+                                    .select(["question","description","options","marks"])
+        questions.push(questionInfo);
+    }
+    res.send(questions);
+}
 
+const completedQuiz = async (req, res) => {       // for checking whether current use is already completed the quiz or not
+    const {userId, postId} = req.body;
+    const post = await Post.findOne({_id : postId});
+    let completedBy = [...post.completedBy];
+    completedBy.push({
+        id : userId,
+        score : -1
+    });
+    await Post.findByIdAndUpdate({_id : postId}, {completedBy : completedBy});
+    res.send("success");
+}
 
-module.exports = {createPost, fetchPosts, fetchPost, isInstructor, addComment, checkEnrolled, uploadAssignment, getAssignments, saveMarks, getSubmittedDetails, createQuiz}; 
+const gradeQuiz = async (req, res) => {  // for grading the quiz
+    const {postId} = req.body;
+    let post = await Post.findById({_id : postId});
+    let questionsIds = [...post.questions];
+    let questions = [];
+    for(let i = 0 ; i < questionsIds.length ; i++) {
+        let question = await Question.findById({_id : questionsIds[i]});
+        questions.push(question);
+    }
+    let users = [...post.completedBy];
+    let studentMarks = [];
+    for(let i = 0 ; i < users.length ; i++) {
+        let score = 0;
+        let total = 0;
+        let user = await User.findById({_id : users[i].id});
+        let responses = [...user.responses];
+        for(let j = 0 ; j < questions.length ; j++) {
+            total += questions[j].marks;
+            for(let k = 0 ; k < responses.length ; k++) {
+                if(questions[j]._id.toString() === responses[k].quesId.toString()) {
+                    if(questions[j].answer === responses[k].response) {
+                        score += questions[j].marks;
+                    }
+                }
+            }
+        }
+        let data = {
+            name : user.name,
+            email : user.email,
+            score : score,
+            total : total,
+            key : user._id
+        }
+        studentMarks.push(data);
+        users[i].score = score;
+        await Post.findByIdAndUpdate({_id : postId}, {completedBy : users, totalMarks : total});
+    }
+    res.send(studentMarks);
+}
+
+module.exports = {createPost, fetchPosts, fetchPost, isInstructor, addComment, 
+                    checkEnrolled, uploadAssignment, getAssignments, saveMarks, 
+                    getSubmittedDetails, createQuiz, getQuestions, completedQuiz,
+                    gradeQuiz}; 

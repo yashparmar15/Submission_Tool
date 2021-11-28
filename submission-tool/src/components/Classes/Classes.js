@@ -5,10 +5,10 @@ import EmptyComponent from '../Util/EmptyComponent';
 import axios from "axios";
 import SpinCenter from '../../components/Util/SpinCenter'
 
-class Classes extends React.Component {
+class Classes extends React.Component {      // used to show all classes which are enrolled by user of teaching by user
 
     state = {
-        enrolled : [],
+        enrolled : [], // all enrolled classes
         teaching : [],
         classes : [],
         userId : JSON.parse(localStorage.getItem('userInfo'))._id,
@@ -19,12 +19,12 @@ class Classes extends React.Component {
         message.error(err);
     };
 
-    componentDidMount = async () => {
+    componentDidMount = async () => {   // when page load it will fetch all the classes
         try {
             let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-            let enrolled = await axios.post('http://localhost:3000/api/class/enrolled', {userId})
+            let enrolled = await axios.post('/api/class/enrolled', {userId})
             this.setState({enrolled : enrolled.data})
-            let teaching = await axios.post('http://localhost:3000/api/class/teaching', {userId})
+            let teaching = await axios.post('api/class/teaching', {userId})
             this.setState({teaching : teaching.data})
             this.setState({loading : false})
         } catch (error) {
@@ -32,7 +32,7 @@ class Classes extends React.Component {
         }
     }
 
-    handleUnEnrollClass = async (code) => {
+    handleUnEnrollClass = async (code) => {  // for unrolling from the particular class
         let enrolled = this.state.enrolled;
         enrolled = enrolled.filter((enrolledClass) => enrolledClass.code !== code);
         this.setState({enrolled : enrolled});
@@ -41,10 +41,10 @@ class Classes extends React.Component {
             id : id,
             code : code
         }
-        await axios.post('http://localhost:3000/api/class/unenroll', data);
+        await axios.post('/api/class/unenroll', data);
     }
 
-    handleRemoveClass = async (code) => {
+    handleRemoveClass = async (code) => { // for parmanently remove the class
         let teaching = this.state.teaching;
         teaching = teaching.filter((teachingClass) => teachingClass.code !== code);
         this.setState({teaching : teaching});
@@ -53,7 +53,7 @@ class Classes extends React.Component {
             id : id,
             code : code
         }
-        await axios.post('http://localhost:3000/api/class/remove', data);
+        await axios.post('/api/class/remove', data);
     }
 
     render() {
@@ -67,7 +67,9 @@ class Classes extends React.Component {
                         textAlign : 'center',
                         marginBottom : 10
                     }}
-                >Instructing Classes</Typography>
+                >
+                    Instructing Classes
+                </Typography>
                 {this.state.teaching.length === 0 ? <>
                     {this.state.loading ? <SpinCenter /> : null}
                     <EmptyComponent 
@@ -101,7 +103,9 @@ class Classes extends React.Component {
                         textAlign : 'center',
                         marginBottom : 10
                     }}
-                >Enrolled Classes</Typography>
+                >
+                    Enrolled Classes
+                </Typography>
                 {this.state.enrolled.length === 0 ? <>
                     {this.state.loading ? <SpinCenter /> : null}
                     <EmptyComponent 

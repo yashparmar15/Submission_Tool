@@ -16,7 +16,7 @@ import axios from 'axios';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-class NavigationBar extends React.Component {
+class NavigationBar extends React.Component { // Navigation bar
 
     state = {
         isAuthenticated : localStorage.getItem('userInfo'),
@@ -27,9 +27,9 @@ class NavigationBar extends React.Component {
     componentDidMount = async () => {
         if(this.state.isAuthenticated) {
             let userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-            let enrolled = await axios.post('http://localhost:3000/api/class/enrolled', {userId})
+            let enrolled = await axios.post('/api/class/enrolled', {userId})
             this.setState({enrolledClasses : enrolled.data})
-            let teaching = await axios.post('http://localhost:3000/api/class/teaching', {userId})
+            let teaching = await axios.post('/api/class/teaching', {userId})
             this.setState({teachingClasses : teaching.data})
         }
     }

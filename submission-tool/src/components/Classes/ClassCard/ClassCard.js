@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const { Meta } = Card;
 
-class ClassCard extends React.Component {
+class ClassCard extends React.Component {   // class card, use to redirect to the class
   state = {
     loading: false,
     userId : JSON.parse(localStorage.getItem('userInfo'))._id

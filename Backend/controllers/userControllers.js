@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const generateToken = require('../utils/generateToken');
 
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {   // registering the user
     const {name, email, password} = req.body;
 
     const userExists = await User.findOne({ email });
@@ -33,7 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-const authUser = asyncHandler(async (req, res) => {
+const authUser = asyncHandler(async (req, res) => {    // signing in the user
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if(user && (await user.matchPassword(password))) {
@@ -49,4 +49,16 @@ const authUser = asyncHandler(async (req, res) => {
     
 });
 
-module.exports = {registerUser , authUser}; 
+const saveResponse = async (req, res) => {     // saving the responses of user of quiz question
+    const {quesId, userId, response} = req.body;
+    let user = await User.findById({_id : userId});
+    let responses = [...user.responses];
+    let data = {
+        quesId : quesId,
+        response : response
+    }
+    responses.push(data);
+    await User.findByIdAndUpdate({_id : userId}, {responses : responses});
+}
+
+module.exports = {registerUser , authUser, saveResponse}; 

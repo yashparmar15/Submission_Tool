@@ -4,10 +4,9 @@ import {Card, List, Typography} from 'antd';
 import {FileAddFilled} from '@ant-design/icons';
 import {Link} from 'react-router-dom'
 
-class ClassStream extends React.Component {
+class ClassStream extends React.Component {   // page for showing all the posts of the class
    
     state = {
-        // classData : this.props.classData,
         posts : this.props.posts,
     }
 
@@ -49,7 +48,9 @@ class ClassStream extends React.Component {
                                     >
                                         {item.title}
                                     </Link>}
-                                    description= {item.type === "Quiz" ? `Start Time : ${item.startTime}` : `Deadline : ${item.deadline}`}
+                                    description= {item.type === "Quiz" ? `Start Time : ${item.startTime}` 
+                                    : `Deadline : ${item.deadline}`
+                                    }
                                 />
                                 <Link 
                                     to = {item.type === "Quiz" ? 

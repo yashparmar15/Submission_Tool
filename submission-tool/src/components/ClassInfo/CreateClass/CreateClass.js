@@ -4,7 +4,7 @@ import React from "react";
 import AppBuilder from '../../../containers/AppBuilder/AppBuilder';
 import axios from 'axios';
 
-class JoinClass extends React.Component {
+class CreateClass extends React.Component {   // Page for creating the class
 
     state = {
         name : "",
@@ -20,7 +20,7 @@ class JoinClass extends React.Component {
     }
 
 
-    handleSubmit = async() => {
+    handleSubmit = async() => {  // function to create class
         if (this.state.name === "") {
             this.error("Class name should not be empty!");
             return;
@@ -35,7 +35,7 @@ class JoinClass extends React.Component {
             instructorName : JSON.parse(localStorage.getItem('userInfo')).name
         }
         
-        let message = await axios.post('http://localhost:3000/api/class', data);
+        let message = await axios.post('/api/class', data);
         if(message.data === "error") {
             this.error("Class with same name already exist");
             this.setState({title : ""});
@@ -84,4 +84,4 @@ class JoinClass extends React.Component {
     }
 }
 
-export default JoinClass;
+export default CreateClass;
